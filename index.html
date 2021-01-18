@@ -25,7 +25,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-4">
-                <div class="card border-secondary mb-3" style="max-width: 18rem;">
+                <div class="card border-secondary m-3" style="max-width: 18rem;">
                     <div class="card-header">
                         <h3>Search for City</h3>
                     </div>
@@ -45,20 +45,45 @@
 
                 </div>
             </div>
-                <div class="col-lg-8">
-                    <h2>Today is <span id="timeSpan"></span></h2>
+            <div class="col-lg-8">
+                <div class="container border border-secondary m-3">
+                    <div class="justify-content-center ">
+                        <div class="row justify-content-center p-3">
+                        <h2>Today is <span id="timeSpan"></span></h2>
+                        </div>
+                        <br>
+                        <h2 id="currentCityName"></h2>
+                        <h5 id="temperature">Temp</h5>
+                        <h5 id="Humidity">Humidity</h5>
+                        <h5 id="Wind Speed">Wind Speed</h5>
+                        <h5 id="UV Index">UV Index</h5>
+                        <br>
+                        <h3 id="forcast">5 Day Forcast</h3>
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="column card border-secondary p-3 m-3" data-box="day1">1</div>
+                                <div class="column card border-secondary p-3 m-3"
+                                data-box="box2">2</div>
+                                <div class="column card border-secondary p-3 m-3" data-box="box3">3</div>
+                                <div class="column card border-secondary p-3 m-3 " data-box="box4">4</div>
+                                <div class="column card border-secondary p-3 m-3 "
+                                data-box="box5">5</div>
 
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
-            integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
-            crossorigin="anonymous"></script>
-        <script src="/script.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
-            integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
-            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+        integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+        crossorigin="anonymous"></script>
+    <script src="/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+        integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+        crossorigin="anonymous"></script>
 
 </body>
 
