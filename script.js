@@ -1,18 +1,38 @@
 let seachButton = document.querySelector("#searchButton")
+let searchForm = document.querySelector("#searchForm")
+let cardText = document.querySelector("#cardText")
+let citiesContainer = document.querySelector("#citiesContainer")
 
-function searchCity(event){
-    // console.log('button clicked')
-      // this will assign the 'data-language' value from the clicked button to this variable 'language'
-      var cityName = event.target.getAttribute("data-city");
-      console.log(cityName)
-    //   if(language){
-    //       getFeaturedRepos(language);
-    //   }
-    //   // clear out previous content
-    //   repoContainerEl.textContent ="";
-    // api.openweathermap.org/data/2.5/forecast?q={data-object-type}&appid={API key}
+function formSubmitHandler(event){
+    event.preventDefault();
+    // get value from input element
+    var searchFormText = searchForm.value.trim();
+    if (searchFormText){
+        console.log(searchFormText)
+        //this will pass searchForm.value into getCurrentWeather function as argument
+        //  getCurrentWeather(searchFormText);
+        //  add div tag to search for city column
+        // create new <h5> tag
+        var cityNameText = document.createElement("h5");
+        // give <div> a class
+        cityNameText.classList="form-control btn btn-outline-secondary align-center"
+        // add text to the element
+        cityNameText.textContent=searchFormText;
+        // append to list
+        cardText.appendChild(cityNameText)
+        // append to page
+        citiesContainer.appendChild(cardText);
+        // this clears the searchFormText
+        searchForm.value = "";               
+    }else{
+        alert("Please enter a city");
+    }
 
 };
+
+function getCurrentWeather(searchFormText){
+
+}
 
 
 function displayDate() {
@@ -27,5 +47,5 @@ setInterval(displayDate, 1000);
 
 displayDate();
 
-searchButton.addEventListener('click', searchCity);
+searchButton.addEventListener('click', formSubmitHandler);
     
