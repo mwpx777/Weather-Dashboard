@@ -8,6 +8,12 @@ let humidity = document.querySelector("#humidity")
 let windSpeed = document.querySelector("#windSpeed")
 let uvIndex = document.querySelector("#uvIndex")
 let uvValue = document.querySelector("#uvValue")
+let tomorrowDate = document.querySelector("#date")
+let tomorrowTemp = document.querySelector("#temp")
+let tomorrowHumid = document.querySelector("#humid")
+let tomorrowIcon = document.querySelector("#icon")
+// this creates empty array for previous searches cities
+var citiesArray = [];
 
 function formSubmitHandler(event) {
     event.preventDefault();
@@ -19,6 +25,9 @@ function formSubmitHandler(event) {
         currentCityName.textContent = searchFormText
         //this will pass searchForm.value into getCurrentWeather function as argument
         getCurrentWeather(searchFormText);
+        getFiveDay(searchFormText);
+        
+
 
         // create new <h5> tag
         var cityNameText = document.createElement("h5");
@@ -30,8 +39,14 @@ function formSubmitHandler(event) {
         cardText.appendChild(cityNameText)
         // append to page
         citiesContainer.appendChild(cardText);
+        //push searchFormText into citiesArray    //this is not working!
+        citiesArray.push(searchFormText);
+        console.log(citiesArray);
+        localStorage.setItem("cityName",citiesArray);
+
         // this clears the searchFormText
         searchForm.value = "";
+
     } else {
         alert("Please enter a city");
     }
@@ -49,11 +64,11 @@ function getCurrentWeather(searchForm) {
             response.json().then(function (data) {
                 displayCurrentWeather(data);
                 getCurrentUv(data);
-                console.log('success');
+                // console.log('success');
             });
 
-        } else {
-            console.log('failure')
+        // } else {
+        //     console.log('failure')
         }
     })
         .catch(function (error) {
@@ -70,11 +85,11 @@ function getCurrentUv(latitude, longitude) {
         if (response.ok) {
             response.json().then(function (data) {
                 displayCurrentUvIndex(data);
-                console.log(' new success');
+                // console.log(' new success');
             });
 
-        } else {
-            console.log('failure')
+        // } else {
+            // console.log('failure')
         }
     })
         .catch(function (error) {
@@ -82,9 +97,6 @@ function getCurrentUv(latitude, longitude) {
         })
 
 };
-
-
-
 
 function displayCurrentWeather(weather) {
     var currentTemp = weather.main.temp
@@ -96,22 +108,26 @@ function displayCurrentWeather(weather) {
     temperature.textContent = "Temperature:  " + currentTemp + "\u00B0 F"
     humidity.textContent = "Humidity: " + currentHumidity + " %"
     windSpeed.textContent = "Wind Speed: " + currentWindSpeed + " mph"
-    console.log(longitude);
-    console.log(latitude);
+    // console.log(longitude);
+    // console.log(latitude);
     getCurrentUv(latitude, longitude)
 
 };
 
 function displayCurrentUvIndex(weather) {
-    console.log('UV Success!');
-    var currentUvIndex = weather.current.uvi
+    // console.log('UV Success!');
+     var currentUvIndex = weather.current.uvi
+    
     if (currentUvIndex < 2.1) {
         // create new <h6> tag
-        var goodUV = document.createElement("h6");
+        var goodUV = document.createElement("h5");
         // give <div> a class
-        goodUV.classList = "btn btn-success p-2 "
+        goodUV.classList = " p-2  justify-content-center"
+        goodUV.style.width = '25%';
+        goodUV.style.background = 'green';
+        goodUV.style.color = 'white';
         // add text to the element
-        goodUV.textContent = currentUvIndex;
+        goodUV.textContent = "UV Index: " + currentUvIndex;
         // append to list
         uvValue.appendChild(goodUV)
         // append to page
@@ -122,43 +138,48 @@ function displayCurrentUvIndex(weather) {
     } else if (currentUvIndex > 2.1 && currentUvIndex < 5) {
 
         // create new <h6> tag
-        var goodUV = document.createElement("h6");
+        var goodUV = document.createElement("h5");
         // give <div> a class
-        goodUV.classList = "btn btn-warning p-2 "
-        // add text to the element
-        goodUV.textContent = currentUvIndex;
+        goodUV.classList = " p-2 "
+        goodUV.style.width = '25%';
+        goodUV.style.background = 'yellow';
+        goodUV.style.color = 'black';
+        goodUV.textContent = "UV Index: " + currentUvIndex;
         // append to list
         uvValue.appendChild(goodUV)
 
 
     } else if (currentUvIndex > 5.1) {
         // create new <h6> tag
-        var goodUV = document.createElement("h6");
+        var goodUV = document.createElement("h5");
         // give <div> a class
-        goodUV.classList = "btn btn-danger p-2 "
-        // add text to the element
-        goodUV.textContent = currentUvIndex;
+        goodUV.classList = " p-2 "
+        goodUV.style.width = '25%';
+        goodUV.style.background = 'red';
+        goodUV.style.color = 'white';
+        goodUV.textContent = "UV Index: " + currentUvIndex;
         // append to list
         uvValue.appendChild(goodUV)
-
     }
-
-
-
-
-    // uvIndex.textContent = "UV Index: " + currentUvIndex
 };
 
 function savedSearch() {
-    var savedSearch = button.innerHTML.trim();
+    // console.log("savedSearch clicked");
+    var cityButton= localStorage.getItem("cityName")
+    console.log(cityButton)
+  
+}
 
-    var weather = "https://api.openweathermap.org/data/2.5/forecast?q=" + savedSearch + "&appid=aa99fd2fc316f423fddae9487450c4d8"
+function getFiveDay(searchForm) {
+    var fiveDay = "https://api.openweathermap.org/data/2.5/forecast?q=" + searchForm + "&units=imperial&appid=aa99fd2fc316f423fddae9487450c4d8"
 
-    console.log(searchForm);
-
-    fetch(weather).then(function (response) {
+    fetch(fiveDay).then(function (response) {
         if (response.ok) {
-            console.log('success')
+            response.json().then(function (data) {
+                displayFiveDay(data);
+
+            });
+
         } else {
             console.log('failure')
         }
@@ -166,6 +187,40 @@ function savedSearch() {
         .catch(function (error) {
             alert("There was a network error")
         })
+
+}
+
+
+function displayFiveDay(weather) {
+    
+    // console.log('fiveSuccess')
+    var date = weather.list[5].dt_txt
+    var splitDate = date.split(" ");
+    var temp = weather.list[5].main.temp
+    var humid = weather.list[5].main.humidity
+    var icon = weather.list[5].weather[0].main
+    console.log(typeof (icon))
+    
+    if (icon == "Clouds") {
+        // tomorrowIcon.innerHTML = '<'i class= "fas fa-cloud"></i>
+        tomorrowIcon.innerHTML = '<span> <img src="Cloudy.svg"> </span>'
+    } else if (icon == "Clear") {
+        tomorrowIcon.innerHTML = '<span> <img src="Sunny.svg"> </span>'
+    } else if (icon == "Rain") {
+        tomorrowIcon.innerHTML = '<span> <img src="Rain.svg"> </span>'
+    } else if (icon == "Snow") {
+        tomorrowIcon.innerHTML = '<span> <img src="Snow.svg"> </span>'
+    }
+    for (var i=0; i<6; i++) {   //left off here--create elements on page for 5
+
+    tomorrowDate.textContent = splitDate[0]
+    // tomorrowIcon.textContent= 
+    tomorrowTemp.textContent = temp + "\u00B0 F"
+    tomorrowHumid.textContent = humid + "% Humidity"
+
+}};
+function deleteUV() {
+    uvValue.remove();
 }
 
 
@@ -181,7 +236,9 @@ setInterval(displayDate, 1000);
 
 displayDate();
 
+searchForm.addEventListener('dblclick', deleteUV)
 searchButton.addEventListener('click', formSubmitHandler);
+citiesContainer.addEventListener('click', savedSearch);
 
 // previousButton.addEventListener('click', savedSearch);
 
