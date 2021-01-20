@@ -39,9 +39,9 @@ function formSubmitHandler(event) {
         cardText.appendChild(cityNameText)
         // append to page
         citiesContainer.appendChild(cardText);
-        //push searchFormText into citiesArray    //this is not working!
+        //push searchFormText into citiesArray    
         citiesArray.push(searchFormText);
-        console.log(citiesArray);
+        // console.log(citiesArray);
         localStorage.setItem("cityName",citiesArray);
 
         // this clears the searchFormText
@@ -161,17 +161,19 @@ function displayCurrentUvIndex(weather) {
         // append to list
         uvValue.appendChild(goodUV)
     }
+    
 };
 
 function savedSearch() {
     // console.log("savedSearch clicked");
-    var cityButton= localStorage.getItem("cityName")
+    // var cityButton= localStorage.getItem("cityName")
+    var cityButton= citiesArray
     console.log(cityButton)
   
 }
 
 function getFiveDay(searchForm) {
-    var fiveDay = "https://api.openweathermap.org/data/2.5/forecast?q=" + searchForm + "&units=imperial&appid=aa99fd2fc316f423fddae9487450c4d8"
+    var fiveDay = "https://api.openweathermap.org/data/2.5/forecast?q=" + searchForm + "&units=imperial&cnt=1&appid=aa99fd2fc316f423fddae9487450c4d8"
 
     fetch(fiveDay).then(function (response) {
         if (response.ok) {
@@ -196,10 +198,10 @@ function displayFiveDay(weather) {
     // console.log('fiveSuccess')
     var date = weather.list[5].dt_txt
     var splitDate = date.split(" ");
-    var temp = weather.list[5].main.temp
+    var temp = weather.list[5].main.temp_max
     var humid = weather.list[5].main.humidity
     var icon = weather.list[5].weather[0].main
-    console.log(typeof (icon))
+    // console.log(typeof (icon))
     
     if (icon == "Clouds") {
         // tomorrowIcon.innerHTML = '<'i class= "fas fa-cloud"></i>
@@ -220,7 +222,8 @@ function displayFiveDay(weather) {
 
 }};
 function deleteUV() {
-    uvValue.remove();
+     
+    uvValue.innerHTML="";
 }
 
 
@@ -236,7 +239,7 @@ setInterval(displayDate, 1000);
 
 displayDate();
 
-searchForm.addEventListener('dblclick', deleteUV)
+searchForm.addEventListener('click', deleteUV)
 searchButton.addEventListener('click', formSubmitHandler);
 citiesContainer.addEventListener('click', savedSearch);
 
