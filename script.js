@@ -12,10 +12,13 @@ let tomorrowDate = document.querySelector("#date")
 let tomorrowTemp = document.querySelector("#temp")
 let tomorrowHumid = document.querySelector("#humid")
 let tomorrowIcon = document.querySelector("#icon")
+let previousSearches = document.querySelector('#previous')
+let citySearches = document.querySelector(".citySearches")
 // this creates empty array for previous searches cities
-var citiesArray = [];
+// var citiesArray = [];
 
 function formSubmitHandler(event) {
+
     event.preventDefault();
     // get value from input element
     var searchFormText = searchForm.value.trim();
@@ -26,30 +29,46 @@ function formSubmitHandler(event) {
         //this will pass searchForm.value into getCurrentWeather function as argument
         getCurrentWeather(searchFormText);
         getFiveDay(searchFormText);
-        
 
-
-        // create new <h5> tag
-        var cityNameText = document.createElement("h5");
+         // create new <li> tag
+        var cityNameText = document.createElement("li");
         // give <div> a class
-        cityNameText.classList = "form-control btn btn-outline-dark align-center"
+        cityNameText.classList = "listEl form-control btn btn-outline-dark align-center"
         // add text to the element
         cityNameText.textContent = searchFormText;
-        // append to list
-        cardText.appendChild(cityNameText)
-        // append to page
-        citiesContainer.appendChild(cardText);
-        //push searchFormText into citiesArray    
-        citiesArray.push(searchFormText);
-        // console.log(citiesArray);
-        localStorage.setItem("cityName",citiesArray);
+        // append cityNameText to citySearches
+        citySearches.appendChild(cityNameText)
+
 
         // this clears the searchFormText
         searchForm.value = "";
 
+
     } else {
         alert("Please enter a city");
     }
+
+};
+function getSavedWeather(cityNameHistory) {
+    currentCityName.innerHTML = cityNameHistory;
+    uvValue.innerHTML = "";
+
+    var weather = "https://api.openweathermap.org/data/2.5/weather?q=" + cityNameHistory + "&units=imperial&appid=aa99fd2fc316f423fddae9487450c4d8"
+
+    // console.log(cityName);
+
+    fetch(weather).then(function (response) {
+        if (response.ok) {
+            response.json().then(function (data) {
+                displayCurrentWeather(data);
+                getCurrentUv(data);
+                // console.log('success');
+            });
+        }
+    })
+        .catch(function (error) {
+            alert("There was a network error")
+        })
 
 };
 
@@ -66,9 +85,6 @@ function getCurrentWeather(searchForm) {
                 getCurrentUv(data);
                 // console.log('success');
             });
-
-        // } else {
-        //     console.log('failure')
         }
     })
         .catch(function (error) {
@@ -77,25 +93,18 @@ function getCurrentWeather(searchForm) {
 
 };
 function getCurrentUv(latitude, longitude) {
-
     var uvIndex = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude + "&appid=aa99fd2fc316f423fddae9487450c4d8"
-
 
     fetch(uvIndex).then(function (response) {
         if (response.ok) {
             response.json().then(function (data) {
                 displayCurrentUvIndex(data);
-                // console.log(' new success');
             });
-
-        // } else {
-            // console.log('failure')
         }
     })
         .catch(function (error) {
             alert("There was a network error")
         })
-
 };
 
 function displayCurrentWeather(weather) {
@@ -110,14 +119,15 @@ function displayCurrentWeather(weather) {
     windSpeed.textContent = "Wind Speed: " + currentWindSpeed + " mph"
     // console.log(longitude);
     // console.log(latitude);
-    getCurrentUv(latitude, longitude)
+    getCurrentUv(latitude, longitude);
+    getFiveDay(latitude, longitude);
 
 };
 
 function displayCurrentUvIndex(weather) {
     // console.log('UV Success!');
-     var currentUvIndex = weather.current.uvi
-    
+    var currentUvIndex = weather.current.uvi
+
     if (currentUvIndex < 2.1) {
         // create new <h6> tag
         var goodUV = document.createElement("h5");
@@ -132,9 +142,6 @@ function displayCurrentUvIndex(weather) {
         uvValue.appendChild(goodUV)
         // append to page
 
-
-
-
     } else if (currentUvIndex > 2.1 && currentUvIndex < 5) {
 
         // create new <h6> tag
@@ -148,7 +155,6 @@ function displayCurrentUvIndex(weather) {
         // append to list
         uvValue.appendChild(goodUV)
 
-
     } else if (currentUvIndex > 5.1) {
         // create new <h6> tag
         var goodUV = document.createElement("h5");
@@ -161,25 +167,26 @@ function displayCurrentUvIndex(weather) {
         // append to list
         uvValue.appendChild(goodUV)
     }
-    
 };
+    
+    $('.citySearches').on('click', 'li', function () {
+        var cityNameHistory = $(this).text();
+        currentCityName.innerHTML = "";
+        getSavedWeather(cityNameHistory);
+        // console.log(cityNameHistory)
+    });
 
-function savedSearch() {
-    // console.log("savedSearch clicked");
-    // var cityButton= localStorage.getItem("cityName")
-    var cityButton= citiesArray
-    console.log(cityButton)
-  
-}
 
-function getFiveDay(searchForm) {
-    var fiveDay = "https://api.openweathermap.org/data/2.5/forecast?q=" + searchForm + "&units=imperial&cnt=1&appid=aa99fd2fc316f423fddae9487450c4d8"
+function getFiveDay(latitude, longitude) {
+
+    var fiveDay = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude + "&exclude=current,minutely,hourly&units=imperial&appid=aa99fd2fc316f423fddae9487450c4d8"
 
     fetch(fiveDay).then(function (response) {
         if (response.ok) {
             response.json().then(function (data) {
+                // console.log("this works!")
                 displayFiveDay(data);
-
+                console.log(data)
             });
 
         } else {
@@ -189,20 +196,24 @@ function getFiveDay(searchForm) {
         .catch(function (error) {
             alert("There was a network error")
         })
-
 }
 
 
-function displayFiveDay(weather) {
-    
-    // console.log('fiveSuccess')
-    var date = weather.list[5].dt_txt
-    var splitDate = date.split(" ");
-    var temp = weather.list[5].main.temp_max
-    var humid = weather.list[5].main.humidity
-    var icon = weather.list[5].weather[0].main
-    // console.log(typeof (icon))
-    
+function displayFiveDay(daily) {
+
+    //console.log('fiveSuccess')
+    let day = moment().format('MM/DD')
+
+    let humid = 30;
+    let temp = 60;
+    let icon = "Clouds"
+
+
+    // let temp = daily[1].temp.max
+    // let humid = daily[1].humidity
+    // let icon = daily[1].weather[1].main
+    console.log(temp)
+
     if (icon == "Clouds") {
         // tomorrowIcon.innerHTML = '<'i class= "fas fa-cloud"></i>
         tomorrowIcon.innerHTML = '<span> <img src="Cloudy.svg"> </span>'
@@ -213,17 +224,18 @@ function displayFiveDay(weather) {
     } else if (icon == "Snow") {
         tomorrowIcon.innerHTML = '<span> <img src="Snow.svg"> </span>'
     }
-    for (var i=0; i<6; i++) {   //left off here--create elements on page for 5
+    for (var i = 0; i <= 5; i++) {   //left off here--create elements on page for 5
 
-    tomorrowDate.textContent = splitDate[0]
-    // tomorrowIcon.textContent= 
-    tomorrowTemp.textContent = temp + "\u00B0 F"
-    tomorrowHumid.textContent = humid + "% Humidity"
+        tomorrowDate.textContent = day
 
-}};
+        tomorrowTemp.textContent = temp + "\u00B0 F"
+        tomorrowHumid.textContent = humid + "% Humidity"
+
+    }
+};
+
 function deleteUV() {
-     
-    uvValue.innerHTML="";
+    uvValue.innerHTML = "";
 }
 
 
@@ -233,7 +245,6 @@ function displayDate() {
     // this displays currentDate on page in .date area
     document.querySelector("#timeSpan").innerHTML = currentDate;
 }
-
 //this calls the displayDate function every 1000ms
 setInterval(displayDate, 1000);
 
@@ -241,7 +252,4 @@ displayDate();
 
 searchForm.addEventListener('click', deleteUV)
 searchButton.addEventListener('click', formSubmitHandler);
-citiesContainer.addEventListener('click', savedSearch);
-
-// previousButton.addEventListener('click', savedSearch);
-
+// citiesContainer.addEventListener('click', savedSearch);
