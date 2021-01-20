@@ -171,12 +171,13 @@ function savedSearch() {
 }
 
 function getFiveDay(searchForm) {
-    var fiveDay = "https://api.openweathermap.org/data/2.5/forecast?q=" + searchForm + "&units=imperial&appid=aa99fd2fc316f423fddae9487450c4d8"
-
+    // var fiveDay = "http://api.weatherstack.com/current?=84e256863183471e853edffeb72d3b4c&=Denver
+    var fiveDay = "https://api.weather.yahoo.com/forecast?location=sunnyvale,ca&format=json"
+    iEzDfZAZX1G0aBqrYjfZbvZnUWGVdXPn
     fetch(fiveDay).then(function (response) {
         if (response.ok) {
             response.json().then(function (data) {
-                displayFiveDay(data);
+                // displayFiveDay(data);
 
             });
 
@@ -187,38 +188,39 @@ function getFiveDay(searchForm) {
         .catch(function (error) {
             alert("There was a network error")
         })
+        console.log(fiveDay)
 
 }
 
 
-function displayFiveDay(weather) {
+// function displayFiveDay(weather) {
     
-    // console.log('fiveSuccess')
-    var date = weather.list[5].dt_txt
-    var splitDate = date.split(" ");
-    var temp = weather.list[5].main.temp
-    var humid = weather.list[5].main.humidity
-    var icon = weather.list[5].weather[0].main
-    console.log(typeof (icon))
+//     // console.log('fiveSuccess')
+//     var date = weather.list[5].dt_txt
+//     var splitDate = date.split(" ");
+//     var temp = weather.list[5].main.temp
+//     var humid = weather.list[5].main.humidity
+//     var icon = weather.list[5].weather[0].main
+//     console.log(typeof (icon))
     
-    if (icon == "Clouds") {
-        // tomorrowIcon.innerHTML = '<'i class= "fas fa-cloud"></i>
-        tomorrowIcon.innerHTML = '<span> <img src="Cloudy.svg"> </span>'
-    } else if (icon == "Clear") {
-        tomorrowIcon.innerHTML = '<span> <img src="Sunny.svg"> </span>'
-    } else if (icon == "Rain") {
-        tomorrowIcon.innerHTML = '<span> <img src="Rain.svg"> </span>'
-    } else if (icon == "Snow") {
-        tomorrowIcon.innerHTML = '<span> <img src="Snow.svg"> </span>'
-    }
-    for (var i=0; i<6; i++) {   //left off here--create elements on page for 5
+//     if (icon == "Clouds") {
+//         // tomorrowIcon.innerHTML = '<'i class= "fas fa-cloud"></i>
+//         tomorrowIcon.innerHTML = '<span> <img src="Cloudy.svg"> </span>'
+//     } else if (icon == "Clear") {
+//         tomorrowIcon.innerHTML = '<span> <img src="Sunny.svg"> </span>'
+//     } else if (icon == "Rain") {
+//         tomorrowIcon.innerHTML = '<span> <img src="Rain.svg"> </span>'
+//     } else if (icon == "Snow") {
+//         tomorrowIcon.innerHTML = '<span> <img src="Snow.svg"> </span>'
+//     }
+//     for (var i=0; i<6; i++) {   //left off here--create elements on page for 5
 
-    tomorrowDate.textContent = splitDate[0]
-    // tomorrowIcon.textContent= 
-    tomorrowTemp.textContent = temp + "\u00B0 F"
-    tomorrowHumid.textContent = humid + "% Humidity"
+//     tomorrowDate.textContent = splitDate[0]
+//     // tomorrowIcon.textContent= 
+//     tomorrowTemp.textContent = temp + "\u00B0 F"
+//     tomorrowHumid.textContent = humid + "% Humidity"
 
-}};
+// }};
 function deleteUV() {
     uvValue.remove();
 }
