@@ -53,6 +53,34 @@ function formSubmitHandler(event) {
         alert("Please enter a city");
     }
 };
+
+
+function getLocalStorage(){
+    // if there aren't items in localStorage array, create new empty array
+    if(localStorage.getItem('cities') === null){
+        citiesArray = [];
+    // else JSON.parse the localStorage "cities" items and bring it back to page
+    }else{
+        citiesArray = JSON.parse(localStorage.getItem('cities'))
+    }
+ 
+    citiesArray.forEach(function(stored){
+                
+    var cityNameText = document.createElement("li");
+    // give <div> a class
+    cityNameText.classList = "listEl form-control btn btn-outline-dark align-center"
+    // add text to the element
+    cityNameText.textContent = stored;
+    // append cityNameText to citySearches
+    citySearches.appendChild(cityNameText)
+    })
+};   
+
+
+getLocalStorage();
+
+
+
 function getSavedWeather(cityNameHistory) {
     currentCityName.innerHTML = cityNameHistory;
     uvValue.innerHTML = "";
