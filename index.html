@@ -18,24 +18,31 @@
     <nav class="navbar navbar-dark bg-dark">
         <div class="container-fluid justify-content-center">
             <span class="navbar-brand mb-0 h1">
-                <h1><i class="fas fa-cloud"></i> Weather Dashboard <i class="fas fa-cloud"></i></h1>
+                <h1><i class="fas fa-cloud"></i>   Weather Dashboard   <i class="fas fa-cloud"></i></h1>
             </span>
         </div>
     </nav>
     <div class="container">
         <div class="row">
-            <div class="col-lg-4">
-                <div class="card border-secondary m-3" style="max-width: 18rem;">
-                    <div class="card-header">
-                        <h3>Search for City</h3>
+            <div class="col-lg-4 justify-content-center">
+                <div class="card border-secondary shadow m-3">
+                    <div class="card-header justify-content-center">
+                        <div class="row justify-content-center"
+                        <h2>Search for City</h2>
+                        </div>
                     </div>
                     <div class="card-body text-secondary">
-                        <div class="mb-3">
-
-                            <input type="search" class="form-control" data-city="city" id="searchForm">
-                            <button type="button" class="btn btn-primary" id="searchButton"> <i
-                                    class="fas fa-search-location"></i></button>
+                        <div class="row justify-content-center">
+                            <div class="column">
+                                <input type="search" class="form-control" data-city="city" id="searchForm">
+                            </div>
+                            <div class="column">
+                                <button type="button" class="btn btn-primary" id="searchButton"> <i
+                                        class="fas fa-search-location"></i></button>
+                            </div>
                         </div>
+                        <br>
+
                         <div class="container" id="citiesContainer">
                             <div id="cardText">
                                 <ul class="citySearches"></ul>
@@ -58,42 +65,20 @@
                         <h5 id="humidity">Humidity</h5>
                         <h5 id="windSpeed">Wind Speed</h5>
                         <h5 id="uvValue"></h5>
-                        <!-- <div class="container" id="uvValue">
-                        </div> -->
+
                     </div>
-                    <br>
-                    <h3 id="forcast">5 Day Forcast</h3>
-                    <div class="container ">
-                        <div class="row justify-content-center ">
-                            <div class="column card border-secondary p-3 m-3 bg-light " data-box="day1">
-                                <h6 id="date"></h6>
-                                <span id="icon"></span>
-                                <h6 id="temp"></h6>
-                                <h6 id="humid"></h6>
-                            </div>
-                            <div class="column card border-secondary p-3 m-3 bg-light " data-box="day2">
-                                <h6 id="date"></h6>
-                                <span id="icon"></span>
-                                <h6 id="temp"></h6>
-                                <h6 id="humid"></h6>
-                            </div>
-                            <div class="column card border-secondary p-3 m-3 bg-light " data-box="day3">
-                                <h6 id="date"></h6>
-                                <span id="icon"></span>
-                                <h6 id="temp"></h6>
-                                <h6 id="humid"></h6>
-                            </div>
-                            <div class="column card border-secondary p-3 m-3 bg-light " data-box="day4">
-                                <h6 id="date"></h6>
-                                <span id="icon"></span>
-                                <h6 id="temp"></h6>
-                                <h6 id="humid"></h6>
-                            </div>
-                            <div class="column card border-secondary p-3 m-3 bg-light " data-box="day5">
-                                <h6 id="date"></h6>
-                                <span id="icon"></span>
-                                <h6 id="temp"></h6>
-                                <h6 id="humid"></h6>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="container">
+                    <div class="justify-content-center ">
+                        <div class="row justify-content-center p-3" id="fiveDayHead">
+                        </div>
+                        <!-- <h3 id="forcast">5 Day Forcast</h3> -->
+                        <div class="container">
+                            <div class="row justify-content-center" id="fiveDayContainer">
+
                             </div>
                         </div>
                     </div>

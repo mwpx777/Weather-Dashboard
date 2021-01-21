@@ -14,8 +14,10 @@ let tomorrowHumid = document.querySelector("#humid")
 let tomorrowIcon = document.querySelector("#icon")
 let previousSearches = document.querySelector('#previous')
 let citySearches = document.querySelector(".citySearches")
+let fiveDayContainer = document.querySelector('#fiveDayContainer')
+let fiveDayHead = document.querySelector('#fiveDayHead')
 // this creates empty array for previous searches cities
-// var citiesArray = [];
+var citiesArray = [];
 
 function formSubmitHandler(event) {
 
@@ -30,7 +32,7 @@ function formSubmitHandler(event) {
         getCurrentWeather(searchFormText);
         getFiveDay(searchFormText);
 
-         // create new <li> tag
+        // create new <li> tag
         var cityNameText = document.createElement("li");
         // give <div> a class
         cityNameText.classList = "listEl form-control btn btn-outline-dark align-center"
@@ -38,6 +40,9 @@ function formSubmitHandler(event) {
         cityNameText.textContent = searchFormText;
         // append cityNameText to citySearches
         citySearches.appendChild(cityNameText)
+        citiesArray.push(searchFormText)
+        localStorage.setItem("cities", JSON.stringify (citiesArray))
+        
 
 
         // this clears the searchFormText
@@ -47,11 +52,12 @@ function formSubmitHandler(event) {
     } else {
         alert("Please enter a city");
     }
-
 };
 function getSavedWeather(cityNameHistory) {
     currentCityName.innerHTML = cityNameHistory;
     uvValue.innerHTML = "";
+    fiveDayContainer.innerHTML = "";
+    fiveDayHead.innerHTML = "";
 
     var weather = "https://api.openweathermap.org/data/2.5/weather?q=" + cityNameHistory + "&units=imperial&appid=aa99fd2fc316f423fddae9487450c4d8"
 
@@ -92,6 +98,11 @@ function getCurrentWeather(searchForm) {
         })
 
 };
+
+ setInterval(getCurrentWeather, 60000);
+ 
+
+
 function getCurrentUv(latitude, longitude) {
     var uvIndex = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude + "&appid=aa99fd2fc316f423fddae9487450c4d8"
 
@@ -106,6 +117,8 @@ function getCurrentUv(latitude, longitude) {
             alert("There was a network error")
         })
 };
+
+setInterval(getCurrentUv, 60000);
 
 function displayCurrentWeather(weather) {
     var currentTemp = weather.main.temp
@@ -123,6 +136,7 @@ function displayCurrentWeather(weather) {
     getFiveDay(latitude, longitude);
 
 };
+
 
 function displayCurrentUvIndex(weather) {
     // console.log('UV Success!');
@@ -168,29 +182,28 @@ function displayCurrentUvIndex(weather) {
         uvValue.appendChild(goodUV)
     }
 };
-    
-    $('.citySearches').on('click', 'li', function () {
-        var cityNameHistory = $(this).text();
-        currentCityName.innerHTML = "";
-        getSavedWeather(cityNameHistory);
-        // console.log(cityNameHistory)
-    });
+
+//variable for sending cityNameHistory to getSavedWeather function
+$('.citySearches').on('click', 'li', function () {
+    var cityNameHistory = $(this).text();
+    currentCityName.innerHTML = "";
+    getSavedWeather(cityNameHistory);
+});
 
 
 function getFiveDay(latitude, longitude) {
 
-    var fiveDay = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude + "&exclude=current,minutely,hourly&units=imperial&appid=aa99fd2fc316f423fddae9487450c4d8"
+    var fiveDay = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude + "&exclude=alerts,current,minutely,hourly&units=imperial&appid=aa99fd2fc316f423fddae9487450c4d8"
 
     fetch(fiveDay).then(function (response) {
         if (response.ok) {
             response.json().then(function (data) {
-                // console.log("this works!")
-                displayFiveDay(data);
-                console.log(data)
+                //  console.log("this works!")
+                // this passes just the daily array to displayFiveDay
+                displayFiveDay(data.daily);
+                // console.log(data)
             });
 
-        } else {
-            console.log('failure')
         }
     })
         .catch(function (error) {
@@ -201,41 +214,63 @@ function getFiveDay(latitude, longitude) {
 
 function displayFiveDay(daily) {
 
-    //console.log('fiveSuccess')
-    let day = moment().format('MM/DD')
+    var fiveDayHeader = document.createElement('h2')
+    fiveDayHeader.textContent= "5 Day Forcast"
+    fiveDayHead.appendChild(fiveDayHeader)
+  
+    // console.log(daily)
+    
+    for (var i = 0; i < 5; i++) { 
+        // this grabs dt timestamp
+        let unix_timestamp = daily[i].dt
+        // this converts unix_timestamp to date and splits the time off only displaying the [0] array which is the date
+        var timeStamp = new Date(unix_timestamp * 1000).toLocaleString().split(",")[0];
 
-    let humid = 30;
-    let temp = 60;
-    let icon = "Clouds"
+        let temp = daily[i].temp.max
+        let humid = daily[i].humidity
+        let icon = daily[i].weather[0].main
+        
+        // create weather box
+        var weatherBox = document.createElement("div")
+        weatherBox.classList =  "column card border-secondary p-3 m-3 shadow bg-light rounded"
 
+        var fiveDayDate = document.createElement('span')
+        fiveDayDate.classList = "fiveDayDate"
+        fiveDayDate.textContent = timeStamp
+        weatherBox.appendChild(fiveDayDate)
 
-    // let temp = daily[1].temp.max
-    // let humid = daily[1].humidity
-    // let icon = daily[1].weather[1].main
-    console.log(temp)
+        var fiveDayIcon = document.createElement('span')
+        fiveDayIcon.classList = "fiveDayIcon"
+        if (icon == "Clouds") {
+            // tomorrowIcon.innerHTML = '<'i class= "fas fa-cloud"></i>
+            fiveDayIcon.innerHTML =  '<img src="Cloudy.svg" width = 100px>'
+        } else if (icon == "Clear") {
+            fiveDayIcon.innerHTML = ' <img src="Sunny.svg" width = 100px>'
+        } else if (icon == "Rain") {
+            fiveDayIcon.innerHTML = ' <img src="Rain.svg" width = 100px> '
+        } else if (icon == "Snow") {
+            fiveDayIcon.innerHTML = ' <img src="Snow.svg" width = 100px> '
+        }
+        weatherBox.appendChild(fiveDayIcon)
 
-    if (icon == "Clouds") {
-        // tomorrowIcon.innerHTML = '<'i class= "fas fa-cloud"></i>
-        tomorrowIcon.innerHTML = '<span> <img src="Cloudy.svg"> </span>'
-    } else if (icon == "Clear") {
-        tomorrowIcon.innerHTML = '<span> <img src="Sunny.svg"> </span>'
-    } else if (icon == "Rain") {
-        tomorrowIcon.innerHTML = '<span> <img src="Rain.svg"> </span>'
-    } else if (icon == "Snow") {
-        tomorrowIcon.innerHTML = '<span> <img src="Snow.svg"> </span>'
-    }
-    for (var i = 0; i <= 5; i++) {   //left off here--create elements on page for 5
+        var fiveDayTemp = document.createElement('span')
+        fiveDayTemp.classList = "fiveDatTemp"
+        fiveDayTemp.textContent = temp + "\u00B0 F"
+        weatherBox.appendChild(fiveDayTemp)
 
-        tomorrowDate.textContent = day
+        var fiveDayHumid = document.createElement('span')
+        fiveDayHumid.classList = "fiveDayHumid"
+        fiveDayHumid.textContent = humid + "% Humidity"
+        weatherBox.appendChild(fiveDayHumid)
 
-        tomorrowTemp.textContent = temp + "\u00B0 F"
-        tomorrowHumid.textContent = humid + "% Humidity"
-
+        fiveDayContainer.appendChild(weatherBox)
     }
 };
 
 function deleteUV() {
     uvValue.innerHTML = "";
+    fiveDayContainer.innerHTML = "";
+    fiveDayHead.innerHTML = "";
 }
 
 
@@ -252,4 +287,4 @@ displayDate();
 
 searchForm.addEventListener('click', deleteUV)
 searchButton.addEventListener('click', formSubmitHandler);
-// citiesContainer.addEventListener('click', savedSearch);
+
