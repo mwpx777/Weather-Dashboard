@@ -286,6 +286,7 @@ function displayFiveDay(daily) {
         let temp = daily[i].temp.max
         let humid = daily[i].humidity
         let icon = daily[i].weather[0].main
+        let wind = daily[i].wind_speed
         
         // create weather box
         var weatherBox = document.createElement("div")
@@ -319,6 +320,11 @@ function displayFiveDay(daily) {
         fiveDayHumid.classList = "fiveDayHumid"
         fiveDayHumid.textContent = humid + "% Humidity"
         weatherBox.appendChild(fiveDayHumid)
+
+        var fiveDayWind = document.createElement('span')
+        fiveDayWind.classList = "fiveDayWind"
+        fiveDayWind.textContent = wind + " mph"
+        weatherBox.appendChild(fiveDayWind)
 
         fiveDayContainer.appendChild(weatherBox)
     }
