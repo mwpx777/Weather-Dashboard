@@ -16,6 +16,7 @@ let previousSearches = document.querySelector('#previous')
 let citySearches = document.querySelector(".citySearches")
 let fiveDayContainer = document.querySelector('#fiveDayContainer')
 let fiveDayHead = document.querySelector('#fiveDayHead')
+let weatherIcon = document.querySelector('#weatherIcon')
 // this creates empty array for previous searches cities
 var citiesArray = [];
 
@@ -115,7 +116,7 @@ function getCurrentWeather(searchForm) {
     fetch(weather).then(function (response) {
         if (response.ok) {
             response.json().then(function (data) {
-                displayCurrentWeather(data);
+                displayCurrentWeather(data.weather);
                 getCurrentUv(data);
                 // console.log('success');
             });
@@ -154,6 +155,9 @@ function displayCurrentWeather(weather) {
     var currentWindSpeed = weather.wind.speed
     var latitude = weather.coord.lat
     var longitude = weather.coord.lon
+    
+
+
 
     temperature.textContent = "Temperature:  " + currentTemp + "\u00B0 F"
     humidity.textContent = "Humidity: " + currentHumidity + " %"
@@ -162,9 +166,31 @@ function displayCurrentWeather(weather) {
     // console.log(latitude);
     getCurrentUv(latitude, longitude);
     getFiveDay(latitude, longitude);
+    
 
 };
+function displayCurrentIcon(daily){
+    var icon = daily[0].weather[0].main
+    console.log(icon)
+    
+    
+        if (icon == "Clouds") {
+            // tomorrowIcon.innerHTML = '<'i class= "fas fa-cloud"></i>
+            weatherIcon.innerHTML =  '<img src="Cloudy.svg" width = 100px>'
+        } else if (icon == "Clear") {
+            weatherIcon.innerHTML = ' <img src="Sunny.svg" width = 100px>'
+        } else if (icon == "Rain") {
+            weatherIcon.innerHTML = ' <img src="Rain.svg" width = 100px> '
+        } else if (icon == "Snow") {
+            weatherIcon.innerHTML = ' <img src="Snow.svg" width = 100px> '
+        }
 
+        
+
+    }
+
+
+   
 
 function displayCurrentUvIndex(weather) {
     // console.log('UV Success!');
@@ -215,6 +241,7 @@ function displayCurrentUvIndex(weather) {
 $('.citySearches').on('click', 'li', function () {
     var cityNameHistory = $(this).text();
     currentCityName.innerHTML = "";
+    weatherIcon.innerHTML = "",
     getSavedWeather(cityNameHistory);
 });
 
@@ -229,6 +256,8 @@ function getFiveDay(latitude, longitude) {
                 //  console.log("this works!")
                 // this passes just the daily array to displayFiveDay
                 displayFiveDay(data.daily);
+                displayCurrentIcon(data.daily);
+
                 // console.log(data)
             });
 
