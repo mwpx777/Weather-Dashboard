@@ -116,7 +116,7 @@ function getCurrentWeather(searchForm) {
     fetch(weather).then(function (response) {
         if (response.ok) {
             response.json().then(function (data) {
-                displayCurrentWeather(data.weather);
+                displayCurrentWeather(data);
                 getCurrentUv(data);
                 // console.log('success');
             });
@@ -148,6 +148,8 @@ function getCurrentUv(latitude, longitude) {
 };
 
 setInterval(getCurrentUv, 60000);
+
+
 
 function displayCurrentWeather(weather) {
     var currentTemp = weather.main.temp
