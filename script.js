@@ -176,7 +176,7 @@ function displayCurrentIcon(daily){
     
         if (icon == "Clouds") {
             // tomorrowIcon.innerHTML = '<'i class= "fas fa-cloud"></i>
-            weatherIcon.innerHTML =  '<img src="Cloudy.svg" width = 100px>'
+            weatherIcon.innerHTML =  '<img src="Cloudy1.svg" width = 100px>'
         } else if (icon == "Clear") {
             weatherIcon.innerHTML = ' <img src="Sunny.svg" width = 100px>'
         } else if (icon == "Rain") {
@@ -301,7 +301,7 @@ function displayFiveDay(daily) {
         fiveDayIcon.classList = "fiveDayIcon"
         if (icon == "Clouds") {
             // tomorrowIcon.innerHTML = '<'i class= "fas fa-cloud"></i>
-            fiveDayIcon.innerHTML =  '<img src="Cloudy.svg" width = 100px>'
+            fiveDayIcon.innerHTML =  '<img src="Cloudy1.svg" width = 100px>'
         } else if (icon == "Clear") {
             fiveDayIcon.innerHTML = ' <img src="Sunny.svg" width = 100px>'
         } else if (icon == "Rain") {
